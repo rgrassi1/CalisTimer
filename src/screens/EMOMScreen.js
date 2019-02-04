@@ -12,6 +12,11 @@ import {
 import Select from '../components/Select'
 import Title from '../components/Title'
 import Timer from '../components/Timer'
+import ProgressBar from '../components/ProgressBar'
+import BackgroundProgress from '../components/BackgroundProgress'
+//import Sound from 'react-native-sound'
+
+//const alert = require('../../assets/sounds/alert.wav')
 
 class EMOMScreen extends Component {
 
@@ -49,20 +54,22 @@ class EMOMScreen extends Component {
     }
 
     componentDidMount() {
+        //Sound.setCategory('Playback', true)
+        //this.alert = new Sound(alert)
     }
 
     render() {  
         if (this.state.isRunning) {
-            const perMinute = (this.state.count % 60) / 60
-            const percTime = (this.state.count/60) / parseInt(this.state.time)
+            const percMinute = parseInt(((this.state.count % 60) / 60) * 100)
+            const percTime = parseInt((this.state.count / 60) / parseInt(this.state.time) * 100)
             return (
-                <View>
-                    <Text>Cowntdown: {this.state.cowntdownValue}</Text>
-                    <Timer time={this.state.count}/>
-                    <Text>Minute: {perMinute}</Text>
-                    <Text>Time: {percTime}</Text>
-
-                </View>
+                <BackgroundProgress percentage={percMinute}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <Timer time={this.state.count}/>
+                        <ProgressBar percentage={percTime}/>
+                        <Timer time={this.state.time * 60 - this.state.count} type={'text2'}/>
+                    </View>
+                </BackgroundProgress>
             )
         } 
         return (
@@ -113,6 +120,7 @@ EMOMScreen.navigationOptions = {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#DA3047',
+        flex: 1
     },
     label: {
         textAlign: 'center',
